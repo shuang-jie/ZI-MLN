@@ -1,4 +1,9 @@
 rm(list = ls())
+
+list.of.packages <- c("factoextra", "statmod", "GIGrvg", "extraDistr", "mvtnorm", "corrplot")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+
 n = 70 
 J = 150 
 K.true = 5
@@ -91,25 +96,7 @@ K = 10
 library(statmod)
 library(GIGrvg)
 library(extraDistr)
-library(Rcpp)
 library(mvtnorm)
-sourceCpp("C:/Users/19198/OneDrive/Desktop/testR2.cpp")
-rMVNormC <- function(n, mu, Sigma){
-  #' Covariance parameterization
-  #' @param n number of samples to draw
-  #' @param mu p-vector mean
-  #' @param Sigma covariance matrix (p x p)
-  #' @return matrix of dimension n x p of samples
-  
-  p <- length(mu)
-  Z <- matrix(rnorm(p*n), p, n)
-  L <- t(chol(Sigma)) # By default R's chol fxn returns upper cholesky factor
-  #X <- L%*%Z
-  X <- eigenMapMatMult2(L, Z, n_cores = 4)
-  X <- sweep(X, 1, mu, FUN=`+`)
-  return(t(X))
-}
-
 ################################## MCMC setting ################################
 
 niter = 30000
