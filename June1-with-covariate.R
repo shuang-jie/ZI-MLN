@@ -17,7 +17,7 @@ for(k in 1:K.true){
 }
 sigma2.true = 1
 Omega.true = Lambda.true %*% t(Lambda.true) + sigma2.true * diag(J)
-corrplot::corrplot(cov2cor(Omega.true), tl.pos = 'n')
+# corrplot::corrplot(cov2cor(Omega.true), tl.pos = 'n')
 
 library(factoextra)
 res.pca = prcomp(Omega.true)
@@ -34,7 +34,7 @@ mu.true = matrix(NA, n, J)
 M = 35
 m = rep(1:M, 2)
 true.cor <- cov2cor(Omega.true+diag(vs2.true,J))
-corrplot::corrplot(true.cor, tl.pos = 'n')
+#  corrplot::corrplot(true.cor, tl.pos = 'n')
 max(true.cor[1:50, 1:50][-which(true.cor[1:50, 1:50]==1)])
 min(true.cor[1:50, 1:50][-which(true.cor[1:50, 1:50]==1)])
 
