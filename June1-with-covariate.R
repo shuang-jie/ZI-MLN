@@ -475,4 +475,4 @@ for(i in 1:niter){
   
   print(i)
 }
-save.image("C:/Users/19198/OneDrive/Desktop/June 1/June 1 with covariate/June1 with 50 Lr8.RData")
+save.image("./June1-with-50-Lr8.RData")
