@@ -8,7 +8,7 @@ For more information, read the paper: ... (link)
 
 ### Install R
 
-MIMIX requires R 3.6 or greater to reproduce the tables and graphics from the paper and to compare the performance of ZI-MLN and its comparators implemented by `edgeR` and `metagenomeSeq`.
+ZI-MLN requires R 3.6 or greater to reproduce the tables and graphics from the paper and to compare the performance of ZI-MLN and its comparators implemented by `edgeR` and `metagenomeSeq`.
 
 Download and install R from [https://www.r-project.org/](https://www.r-project.org/).
 
