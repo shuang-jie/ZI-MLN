@@ -27,7 +27,7 @@ sigma2.true = 1
 Omega.true = Lambda.true %*% t(Lambda.true) + sigma2.true * diag(J)
 corrplot::corrplot(cov2cor(Omega.true), tl.pos = 'n')
 
-
+## PCA checking
 res.pca = prcomp(Omega.true)
 fviz_eig(res.pca, addlabels = T)
 try = svd(Omega.true)
