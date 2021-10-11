@@ -34,4 +34,4 @@ Run `with covariate.R` to fit a model to microbiome data from a designed experim
 - `X.RData`: related covariates in `n` samples (rows) by `p` covariates (columns)
 - `Y.RData`: microbiome OTU data in `n` samples (rows) by `J` OTUs (columns)
 
-For comparators, ZI-MLN without ![equation](http://latex.codecogs.com/gif.latex?O_t%3D%5Ctext%20%7B%20Onset%20event%20at%20time%20bin%20%7D%20t) is just removing the latent factor part. The simplified model takes less tie to implement and includes fewer parameters to estimate. 
+For comparators, ZI-MLN without ![equation]("https://www.codecogs.com/eqnedit.php?latex=\Lambda" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\Lambda" title="\Lambda") is just removing the latent factor part. The simplified model takes less tie to implement and includes fewer parameters to estimate. 
