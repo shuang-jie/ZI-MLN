@@ -1,3 +1,3 @@
-# Bayesian Log-normal Kernel Model for MultivariateZero-inflated Count Data with Application to Microbiome Study
+# Bayesian Modeling of Interaction between Features inSparse Multivariate Count Data with Application toMicrobiome Study
 
 The ope-resource code is under compiling 
