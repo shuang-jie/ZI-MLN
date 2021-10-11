@@ -1,9 +1,17 @@
+################## library set up ###################################
 rm(list = ls())
+library(statmod)
+library(GIGrvg)
+library(extraDistr)
+library(mvtnorm)
+library(factoextra)
+
+
 n = 20 
 J = 150 
 K.true = 5
+K = 10
 zero.rate =50/100 # 80/100
-
 seed = 1
 
 ################## simulation setting ###################################
@@ -22,7 +30,7 @@ sigma2.true = 1
 Omega.true = Lambda.true %*% t(Lambda.true) + sigma2.true * diag(J)
 corrplot::corrplot(cov2cor(Omega.true), tl.pos = 'n')
 
-library(factoextra)
+## PCA checking
 res.pca = prcomp(Omega.true)
 fviz_eig(res.pca, addlabels = T)
 try = svd(Omega.true)
@@ -63,7 +71,7 @@ for(i in 1:n){
 Y = floor(exp(y.star.true))
 max(Y)
 sum(Y==0)
-sum(Y==0)/(n*J) #2.4%
+sum(Y==0)/(n*J)
 
 
 set.seed(seed)
@@ -79,30 +87,6 @@ for(i in 1:n){
 Y = Y*delta.ij.true
 sum(Y==0) ############ about 40% zero
 sum(Y==0)/(n*J)
-
-normalized.log.Y = log(Y+0.01)
-for(i in 1:n){
-  normalized.log.Y[i, ] = normalized.log.Y[i, ] - hat.ri[i]
-}
-Omega.empirical = cov(normalized.log.Y)
-
-library(factoextra)
-res.pca = prcomp(Omega.empirical)
-fviz_eig(res.pca, addlabels = T, ncp = 10, main = '')
-
-try = svd(Omega.empirical)
-eigen(Omega.empirical)$values
-eigen(Omega.empirical)$values[1] / sum(eigen(Omega.empirical)$values)
-fviz_eig(res.pca, addlabels = T, ncp = 20, main = '')
-
-#############################
-
-K = 10
-
-library(statmod)
-library(GIGrvg)
-library(extraDistr)
-library(mvtnorm)
 
 ################################## MCMC setting ################################
 
