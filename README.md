@@ -18,7 +18,8 @@ Once installed, open R from the terminal with `R` and run the following command:
 install.packages(c("statmod", "GIGrvg", "extraDistr", "mvtnorm"))
 ```
 
-Rstudio is a more user-friendly platform to implement R code. Download from [https://www.rstudio.com/products/rstudio/download/]
+Rstudio is a more user-friendly platform to implement R code. Download from [https://www.rstudio.com/products/rstudio/download/](https://www.rstudio.com/products/rstudio/download/).
+
 
 ## Simulation study
 
