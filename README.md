@@ -34,4 +34,4 @@ Run `with covariate.R` to fit a model to microbiome data from a designed experim
 - `X.RData`: related covariates in `n` samples (rows) by `p` covariates (columns)
 - `Y.RData`: microbiome OTU data in `n` samples (rows) by `J` OTUs (columns)
 
-For comparators, ZI-MLN without ![equation](https://latex.codecogs.com/gif.latex?\Lambda) is just removing the latent factor part. The simplified model takes less tie to implement and includes fewer parameters to estimate. 
+For comparators, ZI-MLN without ![equation](https://latex.codecogs.com/gif.latex?\Lambda) is just removing the latent factor part. The simplified model takes less tie to implement and includes fewer parameters to estimate. The other two comprting methods are built in `edgeR` and `metagenomeSeq`.
