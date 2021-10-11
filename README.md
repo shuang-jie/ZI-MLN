@@ -29,25 +29,9 @@ Run `with covariate.R` to simulate the model on artificially-generated data. A s
 
 ## Data analysis
 
-Run `scripts/fit-mcmc.jl` to fit a model to microbiome data from a designed experiment. A call to this script may look like the following:
+Run `with covariate.R` to fit a model to microbiome data from a designed experiment. A call to this script needs the data directory containing two RData:
 
-```
-mkdir nutnet-analysis-results
-julia scripts/fit-mcmc.jl \
-    --hyper nutnet-analysis/configs/hyper.yml \
-    --monitor nutnet-analysis/configs/monitor-mimix.yml \
-    --inits nutnet-analysis/configs/inits.yml \
-    --factors 20 \
-    nutnet-analysis/reduced-data \
-    nutnet-analysis-results
-```
+- `X.RData`: related covariates in `n` samples (rows) by `p` covariates (columns)
+- `Y.RData`: microbiome OTU data in `n` samples (rows) by `J` OTUs (columns)
 
-The data directory must contain three files:
-- `X.csv`: treatment covariates in `n` samples (rows) by `p` covariates (columns)
-- `Y.csv`: microbiome abundance data in `n` samples (rows) by `K` taxa (columns)
-- `Z.csv`: block identifiers in `n` samples (rows) by `q` blocking factors (columns)
-
-Run `./nutnet-analysis/run-nutnet-analysis.sh -d nutnet-analysis/full-data -o nutnet-analysis -f 166 -i 20000 -b 10000 -t 20 -c 1` to reproduce the full NutNet data analysis, which will take aabout 26 hours on a 2.3 GHz Intel Core i5 processor.
-
-To demo the analysis on a small dataset, replace `nutnet-analysis/full-data` with `nutnet-analysis/reduced-data` and select the number of factors (`-f`) to be 100 or fewer.
 
