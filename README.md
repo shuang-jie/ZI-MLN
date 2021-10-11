@@ -23,22 +23,9 @@ Rstudio is a more user-friendly platform to implement R code. Download from [htt
 
 ## Simulation study
 
-Run `scripts/sim-mcmc.jl` to simulate a model on artificially-generated data. A call to this script may look like the following:
+Run `without covariate.R` to simulate the model when there are no covariates on artificially-generated data. Sample size and OTU columns can be specified at the first through n and J. Other parameters specification are as discussed in the simulation part of the paper. 
 
-```
-mkdir simulation-results
-julia scripts/sim-mcmc.jl \
-    --data simulation-study/configs/data.yml \
-    --hyper simulation-study/configs/hyper.yml \
-    --monitor simulation-study/configs/monitor.yml \
-    --inits simulation-study/configs/inits.yml \
-    --seed 123 \
-    --factors 20 \
-    simulation-results
-```
-
-Run `./simulation-study/run-simulation-study.sh -r 50 -o simulation-study/results` to reproduce the simulation study with 50 replicates. A single simulation replicate, which fits all three models (MIMIX, MIMIX w/o Factors, and PERMANOVA), takes around 20 minutes to run on a single core of a 2.3 GHz Intel Core i5 processor. Therefore, a full run of the simulation study with 50 replicates of each of 30 settings parallelized across 20 cores requires about 30 hours.
-
+Run `with covariate.R` to simulate the model on artificially-generated data. A single simulation replicate takes around 0.6 hours (without) / 1.1 hours (with) to run on a single core of a 2.6 GHz Intel Core i7 processor. 
 
 ## Data analysis
 
