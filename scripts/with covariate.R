@@ -1,9 +1,17 @@
+################## library setup #######################################
 rm(list = ls())
+library(statmod)
+library(GIGrvg)
+library(extraDistr)
+library(mvtnorm)
+library(factoextra)
+
+
 n = 70 
 J = 150 
 K.true = 5
+K = 10
 zero.rate = 50/100 # 80/100
-
 seed = 3
 
 ################## simulation setting ###################################
@@ -19,7 +27,7 @@ sigma2.true = 1
 Omega.true = Lambda.true %*% t(Lambda.true) + sigma2.true * diag(J)
 corrplot::corrplot(cov2cor(Omega.true), tl.pos = 'n')
 
-library(factoextra)
+
 res.pca = prcomp(Omega.true)
 fviz_eig(res.pca, addlabels = T)
 try = svd(Omega.true)
@@ -83,27 +91,6 @@ for(i in 1:n){
 Y = Y*delta.ij.true
 sum(Y==0) ############ 40% zero
 sum(Y==0)/(n*J)
-
-
-cor(log(Y+0.01))
-
-library(metagenomeSeq)
-Ymeta = newMRexperiment(t(Y))
-Y.Trim = cumNorm(Ymeta, p =.5)
-mod <- model.matrix(~ -1+X)
-settings <- zigControl(maxit = 11, verbose = T)
-fit <- fitZig(obj = Y.Trim, mod = mod, useCSSoffset = F, control = settings)
-
-
-fit
-#############################
-
-K = 10
-
-library(statmod)
-library(GIGrvg)
-library(extraDistr)
-library(mvtnorm)
 
 
 ################################## MCMC setting ################################
