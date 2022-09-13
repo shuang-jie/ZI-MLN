@@ -21,9 +21,11 @@ install.packages(c("statmod", "GIGrvg", "extraDistr", "mvtnorm"))
 Rstudio is a more user-friendly platform to implement R code. Download from [https://www.rstudio.com/products/rstudio/download/](https://www.rstudio.com/products/rstudio/download/).
 
 
-## Simulation study
+## Simulation study for count table without covariates 
 
 Run `without covariate.R` to simulate the model when there are no covariates on artificially-generated data. Sample size and OTU columns can be specified at the first through n and J. Other parameters specification are as discussed in the simulation part of the paper. 
+
+## Simulation study for count table with covariates 
 
 Run `with covariate.R` to simulate the model on artificially-generated data. A single simulation replicate takes around 0.6 hours (without) / 1.1 hours (with) to run on a single core of a 2.6 GHz Intel Core i7 processor. 
 
