@@ -219,6 +219,10 @@ Y = Y*delta.ij.true
 
 Next we run ZI_MLN_with function in `with covariate.R` to analysis the data. It takes about 1.2hour on Apple Macbookpro M1Max 2021.
 
+```
+ls = ZI_MLN_with(Y, X, M = M, m = m)
+```
+
 Use the following code to do posterior checking:
 
 ```
@@ -377,7 +381,7 @@ ggplot(df.beta.j2.plot, aes(x = True)) +
 
 ## Data analysis
 
-Run functions like simulation cases above. Choices of some hyper-parameters  are discussed in the paper. 
+Run functions like simulation cases above. Number of subject `M` and subject specification `m` is needed to be specified by the user case by case. Choices of some hyper-parameters  are discussed in the paper. 
 
 $a_\phi$: controls the sparsity in the covariance matrix. We recommend not using a very small value at the first try. $a_\phi=1/2$ is a common choice and if you find it does not have enough shrinkage, just gradually decrease it. 
 
