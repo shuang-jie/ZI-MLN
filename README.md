@@ -152,8 +152,5 @@ Run `with covariate.R` to simulate the model on artificially-generated data. A s
 
 ## Data analysis
 
-Run `with covariate.R` to fit a model to microbiome data from a designed experiment. A call to this script needs the data directory containing two RData:
-
-- `X.RData`: related covariates in `n` samples (rows) by `p` covariates (columns)
-- `Y.RData`: microbiome OTU data in `n` samples (rows) by `J` OTUs (columns)
+Run functions like simulation cases above. Functions of some hyper-parameters  are discussed in the paper. 
 
