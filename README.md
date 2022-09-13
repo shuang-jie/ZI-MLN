@@ -8,11 +8,11 @@ For more information, read the paper: Bayesian Modeling of Interaction between F
 
 ### Install R
 
-ZI-MLN requires R 3.6 or greater to reproduce the tables and graphics from the paper and to compare the performance of ZI-MLN and its comparators implemented by `edgeR` and `metagenomeSeq`.
+ZI-MLN requires R 3.6 or greater to reproduce the tables and graphics from the paper and to compare the performance of ZI-MLN and its comparators implemented by package `edgeR` and `metagenomeSeq`.
 
 Download and install R from [https://www.r-project.org/](https://www.r-project.org/).
 
-Once installed, open R from the terminal with `R` and run the following command:
+Once installed, open R from the terminal with R and run the following command:
 
 ```
 install.packages(c("statmod", "GIGrvg", "extraDistr", "mvtnorm"))
