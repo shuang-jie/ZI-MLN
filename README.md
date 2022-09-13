@@ -156,3 +156,8 @@ Run functions like simulation cases above. Functions of some hyper-parameters  a
 
 $a_\phi$: controls the sparsity in the covariance matrix. We recommend not using a very small value at the first try. $a_\phi=1/2$ is a common choice and if you find it does not have enough shrinkage, just gradually decrease it. 
 
+$a_\tau, b_\tau$: we set them to be (1,50) as default. It gives a non-informative priora and one can change to (2, 50). 
+
+$K$: the number of sub-dimension oof covariance matrix decomposition. We set 10 as default. 
+
+$L^r, L^\theta$: the number of mixtures in the prior of $r_i$ and $\theta_j$. We set 8, 15 as default.
