@@ -23,7 +23,10 @@ Rstudio is a more user-friendly platform to implement R code. Download from [htt
 
 ## Simulation study for count table without covariates 
 
-Run `without covariate.R` to simulate the model when there are no covariates on artificially-generated data. Sample size and OTU columns can be specified at the first through n and J. Other parameters specification are as discussed in the simulation part of the paper. 
+Run `without covariate.R` to simulate the model when there are no covariates on artificially-generated data. The input OTU count table do not need normalization. And for input count table, each row is each sample and each column is each features(OTUs). Notice we have also another subject index $m$. Hyper-parameters specification are as discussed in the simulation part of the paper. 
+
+
+
 
 ## Simulation study for count table with covariates 
 
