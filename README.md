@@ -28,6 +28,52 @@ The implementation R code is in `without covariate.R` to analysis the data when 
 A toy example is below for simulating synthentic data:
 
 
+```
+n = 20
+J = 150
+K.true = 5
+zero.rate =80/100 ### notice this zero rate is for the sparsity in the covariance matrix
+seed = 1
+set.seed(seed)
+Lambda.true = matrix(runif(J*K.true, -3, 3), nrow = J, ncol =K.true)
+for(k in 1:K.true){
+  set.seed(k)
+  ind = sample(1:J, size = round(J*zero.rate))
+  Lambda.true[ind, k] = 0
+}
+sig2.true = 1
+Omega.true = Lambda.true %*% t(Lambda.true) + sig2.true * diag(J)
+vs2.true = 1
+true.cor <- cov2cor(Omega.true+diag(vs2.true,J))
+ri.true = runif(n, 3, 7)
+thetaj.true = runif(J, 0, 2)
+mu.true = matrix(NA, n, J)
+M = n
+m = 1:M
+sij.true = smj.true = matrix(rnorm(n*J, 0, sqrt(vs2.true)), nrow = M, ncol = J)
+tilde.X = matrix(1, nrow = n, ncol = 1)
+for(i in 1:n){
+  for(j in 1:J){
+    mu.true[i, j] = ri.true[i] + thetaj.true[j] + smj.true[m[i], j]
+  }
+}
+y.star.true = matrix(NA, nrow = n, ncol = J)
+for(i in 1:n){
+  y.star.true[i, ] = mvtnorm::rmvnorm(1, mean = mu.true[i, ], Omega.true)
+}
+Y = floor(exp(y.star.true))
+kappa.jp.true = matrix(runif(J*1, -1,0), nrow =J, ncol = 1)
+eps.j.true = pnorm(tilde.X %*% t(kappa.jp.true))
+delta.ij.true = matrix(NA, nrow = n, ncol = J)
+for(i in 1:n){
+  for(j in 1:J){
+    delta.ij.true[i, j] = rbinom(1, 1, 1-eps.j.true[i, j])
+  }
+}
+Y = Y*delta.ij.true
+```
+
+
 ## Simulation study for count table with covariates 
 
 Run `with covariate.R` to simulate the model on artificially-generated data. A single simulation replicate takes around 0.6 hours (without) / 1.1 hours (with) to run on a single core of a 2.6 GHz Intel Core i7 processor. 
