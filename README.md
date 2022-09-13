@@ -25,7 +25,7 @@ Rstudio is a more user-friendly platform to implement R code. Download from [htt
 
 The implementation R code is in `without covariate.R` to analysis the data when there are no covariates on artificially-generated data. The input count table do not need normalization. And for input count table, each row is each sample and each column is each features(OTUs). Notice we have also another subject index $m$. For example, $m=1,2,2,3$ means that the first sample belongs to the first subject. The 2nd and 3rd sample belong to the second subject. The 4th sample belong to the third subject. A special case is considered in the paper and below is $m=1,2,3...n$, which implies each subject has their own one sample. Hyper-parameters specification are as discussed in the simulation part of the paper. 
 
-
+A toy example is below for simulating synthentic data:
 
 
 ## Simulation study for count table with covariates 
