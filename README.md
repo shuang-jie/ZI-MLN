@@ -85,7 +85,7 @@ To access the performance, one can use the following code to compare the posteri
 niter= length(ls)
 burn=1:niter
 library(ggplot2)
-library(latex2exp)
+library(latex2exp) ### install if it's not in the library
 
 ############################ ri+thetaj ######################
 
@@ -131,8 +131,25 @@ mean(sapply(burn, function(x) ls[[x]]$vs2))
 mean(sapply(burn, function(x) ls[[x]]$sig2))
 mean(sapply(burn, function(x) ls[[x]]$sig2 + ls[[x]]$vs2))
 
+####################### marginal pos cor  ##################
 
-
+mar.pos.cor = matrix(0, J, J)
+for(ilist in burn){
+  mar.pos.cor = mar.pos.cor + cov2cor(tcrossprod(ls[[ilist]]$Lambda) + diag(ls[[ilist]]$vs2+ls[[ilist]]$sig2, J))
+}
+mar.pos.cor = mar.pos.cor/length(burn)
+true.cor = cov2cor(Omega.true+diag(vs2.true, J))
+df.diff.cor = data.frame(x = mar.pos.cor[upper.tri(mar.pos.cor, diag = F)] - (true.cor)[upper.tri(true.cor, diag = F)])
+ggplot(df.diff.cor, aes(x=x)) + geom_histogram(color="black", fill="white", size=1.1) + theme_bw() +
+  theme(legend.position="none") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ylab('Density')+
+  xlim(c(-1.5,1.5))+
+  xlab(TeX("$\\hat{\\rho_{jj'}}-\\rho_{jj'}^{tr}$")) + 
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.text=element_text(size=25),
+        text=element_text(size=35)) 
 ```
 
 
