@@ -73,7 +73,7 @@ for(i in 1:n){
 Y = Y*delta.ij.true
 ```
 
-After we save the simulated synthetic data and the truth parameters, we can run `without covariate.R` to analysis the data. It takes about 20 minutes on Apple Macbookpro M1Max 2021.
+After we save the simulated synthetic data and the truth parameters, we can run the ZI_MLN_wihout function in `without covariate.R` to analysis the data. It takes about 20 minutes on Apple Macbookpro M1Max 2021.
 
 ```
 ls = ZI_MLN_wihout(Y, M = M, m = m)
