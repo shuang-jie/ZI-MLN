@@ -13,7 +13,7 @@ m = 1:M ### sample group specification. e.g: 1:M implies each row comes from dif
 
 ### function
 
-ZI_MLN_wihout <- function(Y, M = M, m = m, K=10, niter = 20000, seed = 3, a.phi = 1/2, a.tau = 1, b.tau = 1/50, a.sig = 3, b.sig = 3,
+ZI_MLN_without <- function(Y, M = M, m = m, K=10, niter = 20000, seed = 3, a.phi = 1/2, a.tau = 1, b.tau = 1/50, a.sig = 3, b.sig = 3,
                           a.vs2 = 3, b.vs2 = 3, acc.target = 0.44, 
                           Lr = 8, a.phi.r = 3, a.w = 5, b.w = 5, ur2 = 1, 
                           L.theta = 15, a.phi.theta = 1, a.w.theta = 5, b.w.theta = 5, u2.theta = 1,
