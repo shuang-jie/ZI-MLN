@@ -79,6 +79,62 @@ After we save the simulated synthetic data and the truth parameters, we can run 
 ls = ZI_MLN_wihout(Y, M = M, m = m)
 ```
 
+To access the performance, one can use the following code to compare the posterior estimates to the truth. 
+
+```
+niter= length(ls)
+burn=1:niter
+library(ggplot2)
+library(latex2exp)
+
+############################ ri+thetaj ######################
+
+df.riplusthetaj = matrix(NA, nrow = n*J, ncol = 4)
+df.riplusthetaj.mean = df.riplusthetaj.up = df.riplusthetaj.low = df.riplusthetaj.true =  matrix(NA, nrow = n, ncol = J)
+
+for(i in 1:n){
+  for(j in 1:J){
+    cccccc = sapply(burn, function(x) ls[[x]]$ri[i]+ls[[x]]$thetaj[j])
+    df.riplusthetaj.low[i, j] = quantile(cccccc, probs = 0.025)
+    df.riplusthetaj.mean[i, j] = mean(cccccc)
+    df.riplusthetaj.up[i, j] = quantile(cccccc, probs = 0.975)
+    df.riplusthetaj.true[i, j] = ri.true[i] + thetaj.true[j]
+  }
+}
+
+df.riplusthetaj = c(df.riplusthetaj.low)
+df.riplusthetaj = cbind(df.riplusthetaj, c(df.riplusthetaj.mean))
+df.riplusthetaj = cbind(df.riplusthetaj, c(df.riplusthetaj.up))
+df.riplusthetaj = cbind(df.riplusthetaj, c(df.riplusthetaj.true))
+df.riplusthetaj = data.frame(df.riplusthetaj)
+colnames(df.riplusthetaj) <- c('2.5%', 'Pos.Mean', '97.5%', 'True')
+
+ggplot(df.riplusthetaj, aes(x = True)) + 
+  geom_point(aes(y = Pos.Mean, colour = "Pos.Mean"), size = 1) +
+  geom_line(aes(x = True, y = True, colour = "True")) + 
+  theme_bw() +
+  theme(legend.position="none") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ylab(TeX("$\\widehat{r_i+\\alpha_j}$"))+
+  xlab(TeX("$r_i+\\alpha_j$")) + 
+  theme(plot.title = element_text(hjust = 0.5),
+        legend.position = "none",
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text=element_text(size=25),
+        text=element_text(size=30)) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) 
+
+############################## vs2/sig2 ####################
+
+mean(sapply(burn, function(x) ls[[x]]$vs2))
+mean(sapply(burn, function(x) ls[[x]]$sig2))
+mean(sapply(burn, function(x) ls[[x]]$sig2 + ls[[x]]$vs2))
+
+
+
+```
+
 
 ## Simulation study for count table with covariates 
 
