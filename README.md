@@ -154,3 +154,5 @@ Run `with covariate.R` to simulate the model on artificially-generated data. A s
 
 Run functions like simulation cases above. Functions of some hyper-parameters  are discussed in the paper. 
 
+$a_\phi$: controls the sparsity in the covariance matrix. We recommend not using a very small value at the first try. $a_\phi=1/2$ is a common choice and if you find it does not have enough shrinkage, just gradually decrease it. 
+
