@@ -4,6 +4,8 @@ ZI-MLN (Zero Inflated Multivariate rounded Log Normal Model) is a Bayesian model
 
 For more information, read the paper: Bayesian Modeling of Interaction between Features in Sparse Multivariate Count Data with Application to Microbiome Study (to appear in AOAS)
 
+Contact: Shuangjie Zhang (szhan209 AT ucsc DOT edu)
+
 ## Installation
 
 ### Install R
