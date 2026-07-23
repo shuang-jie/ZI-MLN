@@ -20,33 +20,47 @@ Rstudio is a more user-friendly platform to implement R code. Download from [htt
 
 ### Install the ZIMLN package
 
-The model is packaged as the R package **ZIMLN** and can be installed directly from GitHub:
+The model is packaged as the R package **ZIMLN** and can be installed directly from GitHub (the dependencies above are installed automatically):
 
 ```
 # install.packages("remotes")
-remotes::install_github("Zsj950708/ZI-MLN")
+remotes::install_github("shuang-jie/ZI-MLN")
 ```
 
-This installs two exported functions: `ZI_MLN()` (the MCMC sampler) and `simulate_zimln()` (a generator that draws data from the model). A minimal end-to-end example:
+### Exported functions
+
+| Function | Purpose |
+| --- | --- |
+| `ZI_MLN(Y, X = NULL, m, M, ...)` | Fit the ZI-MLN model by MCMC. Leave `X = NULL` for the no-covariate model, or pass a covariate matrix `X` for the covariate model. Returns a list of posterior draws. |
+| `simulate_zimln(n, J, K, ...)` | Draw a synthetic count table (and the ground-truth parameters) from the generative model. |
+| `posterior_correlation(fit, ci = FALSE)` | Posterior marginal OTU correlation matrix `rho_jj'` (optionally with credible bounds). |
+| `posterior_covariance(fit, marginal = TRUE)` | Posterior covariance: marginal `Omega` (default) or interaction `Sigma`. |
+| `posterior_beta(fit)` | Posterior mean and credible intervals of the covariate effects `beta_jp`. |
+
+### Quick start
 
 ```
 library(ZIMLN)
-sim <- simulate_zimln(n = 20, J = 30, K = 3, seed = 1)   # synthetic count table + truth
-fit <- ZI_MLN(sim$Y, m = sim$m, M = sim$M, niter = 2000)  # posterior draws
 
-# posterior-mean marginal OTU correlation matrix
-J <- ncol(sim$Y)
-rho <- Reduce(`+`, lapply(fit, function(d)
-  cov2cor(tcrossprod(d$Lambda) + diag(d$vs2 + d$sig2, J)))) / length(fit)
+# 1. simulate data (or bring your own count matrix Y and covariates X)
+sim <- simulate_zimln(n = 20, J = 30, K = 3, p = 2, seed = 1)
+
+# 2. fit the model
+fit <- ZI_MLN(sim$Y, X = sim$X, m = sim$m, M = sim$M, niter = 2000)
+
+# 3. summarise the posterior
+rho  <- posterior_correlation(fit)          # J x J marginal correlation
+beta <- posterior_beta(fit)                 # covariate effects + 95% intervals
+head(beta$table)
 ```
 
-`ZI_MLN(Y, X = NULL, ...)` is a single entry point: pass `X` to fit the model with covariates, or leave it `NULL` for the no-covariate model. See `?ZI_MLN` and `?simulate_zimln` for all arguments. The reproduction scripts used in the paper remain in [`scripts/`](scripts/).
+`ZI_MLN()` is a single entry point: pass `X` to fit the model with covariates, or leave it `NULL` for the no-covariate model. `m` gives the subject index of each sample and `M` the number of subjects (see below). See `?ZI_MLN`, `?simulate_zimln` and `?posterior_correlation` for all arguments. The original reproduction scripts used in the paper remain in [`scripts/`](scripts/).
 
 ## Simulation study for count table without covariates 
 
-The implementation R code is in `without covariate.R` to analysis the data when there are no covariates on artificially-generated data. The input count table do not need normalization. And for input count table, each row is each sample and each column is each features(OTUs). Notice we have also another subject index $m=1,2...M$. For example, $m=1,2,2,3$ means that the first sample belongs to the first subject. The 2nd and 3rd sample belong to the second subject. The 4th sample belong to the third subject. A special case is considered in the paper and below is $m=1,2,3...n$, which implies each subject has their own one sample. Hyper-parameters specification are as discussed in the simulation part of the paper. 
+The following shows how to analyse data with no covariates on an artificially-generated table (the packaged equivalent is `ZI_MLN(Y, X = NULL, ...)`). The input count table does not need normalization. Each row is a sample and each column is a feature (OTU). There is also a subject index $m = 1, 2, \ldots, M$. For example, $m = 1, 2, 2, 3$ means the first sample belongs to subject 1, the 2nd and 3rd samples belong to subject 2, and the 4th sample belongs to subject 3. A special case, used below, is $m = 1, 2, \ldots, n$, which means each subject contributes exactly one sample. Hyper-parameter choices are discussed in the simulation part of the paper.
 
-A toy example is below for simulating synthentic data:
+A toy example for simulating synthetic data (or simply use `simulate_zimln()`):
 
 ```
 n = 20

@@ -14,8 +14,8 @@ Description: A Bayesian zero-inflated multivariate rounded log-normal (ZI-MLN)
     <doi:10.1214/22-AOAS1690>.
 License: MIT + file LICENSE
 Encoding: UTF-8
-URL: https://github.com/Zsj950708/ZI-MLN
-BugReports: https://github.com/Zsj950708/ZI-MLN/issues
+URL: https://github.com/shuang-jie/ZI-MLN
+BugReports: https://github.com/shuang-jie/ZI-MLN/issues
 Imports:
     stats,
     statmod,
