@@ -60,7 +60,7 @@ m
 M
 
 sim <- simulate_zimln(n = 30, J = 25, K = 3, zero.rate = 0.5,
-                      M = M, m = m, seed = 1)
+                      M = M, m = m, seed = 8)
 
 Y <- sim$Y
 dim(Y)                             # 30 samples x 25 OTUs

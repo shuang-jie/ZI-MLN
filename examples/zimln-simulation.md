@@ -58,21 +58,21 @@ M
 #> [1] 10
 
 sim <- simulate_zimln(n = 30, J = 25, K = 3, zero.rate = 0.5,
-                      M = M, m = m, seed = 1)
+                      M = M, m = m, seed = 8)
 
 Y <- sim$Y
 dim(Y)                             # 30 samples x 25 OTUs
 #> [1] 30 25
 Y[1:6, 1:8]                        # a corner of the count table
-#>       [,1]   [,2] [,3] [,4]  [,5] [,6] [,7] [,8]
-#> [1,]     0   2018 2667  245  1041    0 3221 4197
-#> [2,]   736      0   38  104 22222   71    0  535
-#> [3,] 14084  23842  226    0     4   93    0    0
-#> [4,]  1355 343575    0    0  1545    0    7    0
-#> [5,]  1620  33282  326    4   131   61    5    0
-#> [6,]   255      0    0    0     0  207  424  719
+#>      [,1] [,2]  [,3] [,4]   [,5] [,6] [,7] [,8]
+#> [1,]    2    3     0    0 283561    0   25   27
+#> [2,]  626 3904 66142  185      1    0    1    0
+#> [3,] 1184    1     3  194      0    0  401  411
+#> [4,]    3    0     0  464      0    2    0    0
+#> [5,]   23  501     0  468      0    0  178    0
+#> [6,]   66    0    70  226  17226   60  249    0
 mean(Y == 0)                       # fraction of zeros
-#> [1] 0.324
+#> [1] 0.3386667
 ```
 
 Each row of `Y` is a sample; rows sharing a subject (e.g. rows 1-3) are
@@ -101,7 +101,7 @@ compare the posterior mean to the truth on the off-diagonal entries:
 rho_est <- posterior_correlation(fit)          # J x J matrix
 ut <- upper.tri(rho_est)
 cor(rho_est[ut], sim$true.cor[ut])             # agreement with the truth
-#> [1] 0.8405615
+#> [1] 0.9200584
 ```
 
 ![](zimln-simulation_files/figure-gfm/heatmap-1.png)<!-- -->
@@ -121,7 +121,7 @@ recovered from the draws:
 ``` r
 rt_est <- Reduce(`+`, lapply(fit, function(d) outer(d$ri, d$thetaj, `+`))) / length(fit)
 cor(c(rt_est), c(outer(sim$ri, sim$thetaj, `+`)))
-#> [1] 0.9031084
+#> [1] 0.9129447
 ```
 
 ## Adding covariates
