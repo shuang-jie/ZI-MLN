@@ -3,7 +3,7 @@ Type: Package
 Title: Zero-Inflated Multivariate Rounded Log-Normal Model for Microbiome Count Data
 Version: 0.1.0
 Authors@R:
-    person("Shuangjie", "Zhang", email = "szhan209@tamu.edu", role = c("aut", "cre"))
+    person("Shuangjie", "Zhang", email = "shuangjie.zhang@austin.utexas.edu", role = c("aut", "cre"))
 Description: A Bayesian zero-inflated multivariate rounded log-normal (ZI-MLN)
     model for next-generation sequencing microbiome abundance data. The model
     infers the interaction (covariance) structure between microbial features
