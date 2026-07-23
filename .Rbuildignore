@@ -1,0 +1,10 @@
+^AOAS1690_Online_Version_July_22$
+^scripts$
+^LICENSE\.md$
+^\.git$
+^\.github$
+^\.claude$
+^\.DS_Store$
+^.*\.Rproj$
+^\.Rproj\.user$
+^README\.Rmd$
