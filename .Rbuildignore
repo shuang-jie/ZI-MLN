@@ -4,6 +4,7 @@
 ^\.git$
 ^\.github$
 ^\.DS_Store$
+^examples$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$

@@ -1,0 +1,141 @@
+---
+title: "ZI-MLN: a simple simulation walkthrough"
+output: github_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 8,
+                      fig.height = 4, dpi = 100)
+```
+
+This short walkthrough fits the **ZI-MLN** model to one small, simulated data
+set and checks that it recovers the truth. It focuses on the three inputs new
+users ask about most: the count table `Y`, the subject index `m`, and the number
+of subjects `M`.
+
+```{r install, eval = FALSE}
+# install.packages("remotes")
+remotes::install_github("shuang-jie/ZI-MLN")
+```
+
+```{r library}
+library(ZIMLN)
+```
+
+## The model inputs
+
+`ZI_MLN(Y, X = NULL, m, M, ...)` takes:
+
+| Input | Shape | Meaning |
+| --- | --- | --- |
+| `Y` | `n x J` integer matrix | The **count table**. Each **row is a sample**, each **column is an OTU/feature**. Raw counts — no normalization needed, and zeros are expected and modelled. |
+| `m` | length-`n` integer vector | The **subject index of each sample**: `m[i]` is the subject that sample `i` was taken from. Lets several samples share a subject (repeated measures). |
+| `M` | single integer | The **number of distinct subjects**, i.e. `length(unique(m))`. Defaults to that if omitted. |
+| `X` | `n x P` matrix (optional) | Sample covariates. Leave `NULL` for the no-covariate model; supply it to estimate covariate effects `beta`. |
+
+### Understanding `m` and `M`
+
+`m` tells the model which samples came from the same subject, so it can share a
+subject-level random effect between them. A couple of common cases:
+
+- **One sample per subject** (the simplest): `m = 1:n` and `M = n`. Every sample
+  is its own subject.
+- **Repeated measures**: e.g. 12 samples from 6 subjects, 2 samples each, would be
+  `m = c(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6)` and `M = 6` — sample 1 and 2 share
+  subject 1, samples 3 and 4 share subject 2, and so on.
+
+The values in `m` are just labels `1, ..., M`; only which samples share a label
+matters.
+
+## Simulate a small data set
+
+We use `simulate_zimln()` to draw a count table from the model itself, together
+with the true parameters. Here we take **30 samples from `M = 10` subjects, 3
+samples each**, and `J = 25` OTUs.
+
+```{r simulate}
+M <- 10
+m <- rep(1:M, each = 3)            # 3 samples per subject
+m
+M
+
+sim <- simulate_zimln(n = 30, J = 25, K = 3, zero.rate = 0.5,
+                      M = M, m = m, seed = 1)
+
+Y <- sim$Y
+dim(Y)                             # 30 samples x 25 OTUs
+Y[1:6, 1:8]                        # a corner of the count table
+mean(Y == 0)                       # fraction of zeros
+```
+
+Each row of `Y` is a sample; rows sharing a subject (e.g. rows 1-3) are the
+repeated measures for that subject.
+
+## Fit the model
+
+With the inputs assembled, one call runs the MCMC sampler. We use a fairly short
+chain here so the document knits quickly; for real analyses use the defaults
+(`niter = 20000`).
+
+```{r fit}
+fit <- ZI_MLN(Y, m = m, M = M, niter = 4000, burnin = 2000, seed = 7)
+length(fit)                        # number of retained posterior draws
+```
+
+`fit` is a list of posterior draws. The helper functions summarise it.
+
+## Posterior summaries and recovery
+
+**Marginal OTU correlations** `rho_jj'` — the model's main target. We compare the
+posterior mean to the truth on the off-diagonal entries:
+
+```{r correlation}
+rho_est <- posterior_correlation(fit)          # J x J matrix
+ut <- upper.tri(rho_est)
+cor(rho_est[ut], sim$true.cor[ut])             # agreement with the truth
+```
+
+```{r heatmap, echo = FALSE}
+J <- ncol(Y)
+op <- par(mfrow = c(1, 2), mar = c(2, 2, 2, 1))
+image(sim$true.cor[, J:1], zlim = c(-1, 1), axes = FALSE,
+      main = "True correlation", col = hcl.colors(50, "Blue-Red"))
+image(rho_est[, J:1],       zlim = c(-1, 1), axes = FALSE,
+      main = "Posterior mean", col = hcl.colors(50, "Blue-Red"))
+par(op)
+```
+
+**Covariance** is available too — marginal `Omega` (default) or the interaction
+covariance `Sigma = Lambda Lambda' + sigma^2 I`:
+
+```{r covariance}
+Sigma_est <- posterior_covariance(fit, marginal = FALSE)
+dim(Sigma_est)
+```
+
+**Overall abundance** `r_i + alpha_j` (only the sum is identifiable) is recovered
+from the draws:
+
+```{r abundance}
+rt_est <- Reduce(`+`, lapply(fit, function(d) outer(d$ri, d$thetaj, `+`))) / length(fit)
+cor(c(rt_est), c(outer(sim$ri, sim$thetaj, `+`)))
+```
+
+## Adding covariates
+
+To fit the covariate model, generate (or supply) an `n x P` matrix `X` and pass
+it to `ZI_MLN()`. The covariate effects `beta_jp` then come from
+`posterior_beta()`:
+
+```{r covariates}
+sim2 <- simulate_zimln(n = 30, J = 25, K = 3, p = 2, M = M, m = m, seed = 2)
+fit2 <- ZI_MLN(sim2$Y, X = sim2$X, m = m, M = M,
+               niter = 4000, burnin = 2000, seed = 7)
+
+b <- posterior_beta(fit2)          # posterior mean + 95% intervals per (OTU, covariate)
+head(b$table)
+cor(c(b$mean), c(sim2$beta))       # agreement with the true beta
+```
+
+Even with these short chains the estimates track the truth; longer chains and
+larger data sets give the strong recovery reported in the paper.

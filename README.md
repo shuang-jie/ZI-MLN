@@ -56,7 +56,13 @@ head(beta$table)
 
 `ZI_MLN()` is a single entry point: pass `X` to fit the model with covariates, or leave it `NULL` for the no-covariate model. `m` gives the subject index of each sample and `M` the number of subjects (see below). See `?ZI_MLN`, `?simulate_zimln` and `?posterior_correlation` for all arguments. The original reproduction scripts used in the paper remain in [`scripts/`](scripts/).
 
-## Simulation study for count table without covariates 
+### Walkthrough
+
+For an annotated, end-to-end walkthrough — one simple simulation that explains the `Y`, `m` and `M` inputs step by step and checks parameter recovery — see **[examples/zimln-simulation.md](examples/zimln-simulation.md)** (source: [`examples/zimln-simulation.Rmd`](examples/zimln-simulation.Rmd)).
+
+## Reproducing the paper: simulation without covariates
+
+The sections below reproduce the paper's simulation studies with the full generative code and diagnostic plots. They use larger settings than the quick start and are aimed at reproducing the paper's figures; for a gentler introduction, start from the [walkthrough](examples/zimln-simulation.md) above.
 
 The following shows how to analyse data with no covariates on an artificially-generated table (the packaged equivalent is `ZI_MLN(Y, X = NULL, ...)`). The input count table does not need normalization. Each row is a sample and each column is a feature (OTU). There is also a subject index $m = 1, 2, \ldots, M$. For example, $m = 1, 2, 2, 3$ means the first sample belongs to subject 1, the 2nd and 3rd samples belong to subject 2, and the 4th sample belongs to subject 3. A special case, used below, is $m = 1, 2, \ldots, n$, which means each subject contributes exactly one sample. Hyper-parameter choices are discussed in the simulation part of the paper.
 
@@ -186,9 +192,9 @@ ggplot(df.diff.cor, aes(x=x)) + geom_histogram(color="black", fill="white", size
         text=element_text(size=35)) 
 ```
 
-## Simulation study for count table with covariates 
+## Reproducing the paper: simulation with covariates
 
-First we simulate a synthentic count table with covariate. 
+First we simulate a synthetic count table with covariates. 
 
 ```
 n = 70 
@@ -425,8 +431,8 @@ Run functions like simulation cases above. Number of subject `M` and subject spe
 
 $a_\phi$: controls the sparsity in the covariance matrix. We recommend not using a very small value at the first try. $a_\phi=1/2$ is a common choice and if you find it does not have enough shrinkage, just gradually decrease it. 
 
-$a_\tau, b_\tau$: we set them to be (1,50) as default. It gives a non-informative priora and one can change to (2, 50). 
+$a_\tau, b_\tau$: we set them to be (1,50) as default. It gives a non-informative prior and one can change to (2, 50). 
 
-$K$: the number of sub-dimension oof covariance matrix decomposition. We set 10 as default. 
+$K$: the number of sub-dimensions of the covariance matrix decomposition. We set 10 as default. 
 
 $L^r, L^\theta$: the number of mixtures in the prior of $r_i$ and $\theta_j$. We set 8, 15 as default.
