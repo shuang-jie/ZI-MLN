@@ -187,8 +187,8 @@ ZI_MLN_with <- function(Y, X = X, M = M, m = m, K=10, niter = 30000, seed = 3, a
     ### etai
     for(isample in 1:n){
       index.etai = which(delta[isample, ]!=0)
-      Q = diag(1, nrow = K) + crossprod(Lambda[index.etai,])/sig2
-      a = crossprod(Lambda[index.etai,], RSS[isample, index.etai]) /sig2 
+      Q = diag(1, nrow = K) + crossprod(Lambda[index.etai,, drop=F])/sig2
+      a = crossprod(Lambda[index.etai,, drop=F], RSS[isample, index.etai]) /sig2
       U = chol(Q)
       eta[isample, ] = backsolve(U, backsolve(U, a, transpose = T) + rnorm(K))
     }

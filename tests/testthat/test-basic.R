@@ -78,6 +78,21 @@ test_that("posterior_beta errors without covariates", {
   expect_error(posterior_beta(fit), "without covariates")
 })
 
+test_that("a near-empty sample (single present OTU) does not error", {
+  # Regression test: Lambda[index.etai, ] used to drop to a vector when a sample
+  # had very few present OTUs, breaking crossprod() in the eta update. The rest
+  # of the table stays informative so the sampler itself remains well behaved.
+  s <- simulate_zimln(n = 14, J = 12, K = 2, seed = 4)
+  Y <- s$Y
+  Y[1, ] <- 0L; Y[1, 3] <- 7L        # sample 1 has a single non-zero count
+  Y[2, ] <- 0L                       # sample 2 is entirely zero
+  for (sd in c(1, 2, 3)) {
+    expect_no_error(
+      ZI_MLN(Y, m = s$m, M = s$M, K = 3, niter = 60, burnin = 30, seed = sd)
+    )
+  }
+})
+
 test_that("input validation errors are raised", {
   s <- simulate_zimln(n = 10, J = 8, K = 2, seed = 4)
   expect_error(ZI_MLN(s$Y, m = 1:3), "length")

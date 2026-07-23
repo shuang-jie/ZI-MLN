@@ -215,25 +215,27 @@ ZI_MLN <- function(Y, X = NULL, m = NULL, M = NULL, K = 10,
 
     ## ----- update delta (presence indicator) for observed zeros ---------
     RSS <- y.star - RSS                      # RSS now holds the fitted mean
-    delta[index.Y.0] <- sapply(seq_len(nrow(index.Y.0)), function(x) {
+    ## vapply (not sapply): with zero matching entries sapply returns list(),
+    ## which would coerce the matrix to a list and destroy its dimensions.
+    delta[index.Y.0] <- vapply(seq_len(nrow(index.Y.0)), function(x) {
       prob.0 <- eps.ij[index.Y.0[x, 1], index.Y.0[x, 2]]
       prob.1 <- (1 - prob.0) *
         pnorm(0, mean = RSS[index.Y.0[x, 1], index.Y.0[x, 2]], sd = sqrt(sig2))
-      rbinom(1, 1, prob = prob.1 / (prob.0 + prob.1))
-    })
+      as.numeric(rbinom(1, 1, prob = prob.1 / (prob.0 + prob.1)))
+    }, numeric(1))
     index.delta.1 <- which(delta == 1, arr.ind = TRUE)   # present
     index.delta.0 <- which(delta == 0, arr.ind = TRUE)   # absent
     RSS <- y.star - RSS                      # back to residual
 
     ## ----- probit latent Z ----------------------------------------------
-    Z[index.delta.1] <- sapply(seq_len(nrow(index.delta.1)), function(x)
+    Z[index.delta.1] <- vapply(seq_len(nrow(index.delta.1)), function(x)
       rtruncnorm(1, a = -Inf, b = 0,
                  mean = tilde.X[index.delta.1[x, 1], ] %*% kappa[index.delta.1[x, 2], ],
-                 sd = 1))
-    Z[index.delta.0] <- sapply(seq_len(nrow(index.delta.0)), function(x)
+                 sd = 1), numeric(1))
+    Z[index.delta.0] <- vapply(seq_len(nrow(index.delta.0)), function(x)
       rtruncnorm(1, a = 0, b = Inf,
                  mean = tilde.X[index.delta.0[x, 1], ] %*% kappa[index.delta.0[x, 2], ],
-                 sd = 1))
+                 sd = 1), numeric(1))
 
     ## ----- update kappa and epsilon -------------------------------------
     pos.var.kappa <- solve(crossprod(tilde.X) + Sigma_kappa_inv)
@@ -290,8 +292,10 @@ ZI_MLN <- function(Y, X = NULL, m = NULL, M = NULL, K = 10,
     ## ----- eta ----------------------------------------------------------
     for (isample in 1:n) {
       index.etai <- which(delta[isample, ] != 0)
-      Q <- diag(1, nrow = K) + crossprod(Lambda[index.etai, ]) / sig2
-      a <- crossprod(Lambda[index.etai, ], RSS[isample, index.etai]) / sig2
+      ## drop = FALSE: a sample with a single present OTU would otherwise
+      ## collapse Lambda[index.etai, ] to a vector and break crossprod()
+      Q <- diag(1, nrow = K) + crossprod(Lambda[index.etai, , drop = FALSE]) / sig2
+      a <- crossprod(Lambda[index.etai, , drop = FALSE], RSS[isample, index.etai]) / sig2
       U <- chol(Q)
       eta[isample, ] <- backsolve(U, backsolve(U, a, transpose = TRUE) + rnorm(K))
     }
